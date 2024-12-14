@@ -1,4 +1,4 @@
-Trello clone on react-native
+Trello clone on python django
 
 Technologies: 
 Python
