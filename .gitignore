@@ -1,0 +1,65 @@
+ Python загальні
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+*.~*
+*.orig
+
+# Virtualenv
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+db.sqlite3
+*.sqlite3
+*.sqlite3-journal
+media/
+staticfiles/
+static/
+*.log
+*.pot
+*.pyc
+*.mo
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# IDE (наприклад, VS Code, PyCharm)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Міграції (необов'язково, залежить від вашого проекту)
+*/migrations/*.pyc
+*/migrations/*.pyo
+*/migrations/__pycache__/
+*/migrations/*-checkpoint
+*/migrations/000*.py  # Якщо ви не хочете трекати створені файли міграцій
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+.dockerignore
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,12 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Редагувати колонку{% endblock %}
+
+{% block content %}
+    <h2>Редагувати колонку: {{ column.name }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Оновити колонку</button>
+    </form>
+{% endblock %}

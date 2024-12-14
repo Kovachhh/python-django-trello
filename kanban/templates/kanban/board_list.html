@@ -1,0 +1,28 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Список дошок{% endblock %}
+
+{% block content %}
+    <h2>Всі канбан-дошки</h2>
+    <div class="kanban-board-container">
+        {% for board in boards %}
+            <div class="kanban-column">
+                <div class="column-header">
+                    <h3>{{ board.name }}</h3>
+                    <div class="actions">
+                        <a href="{% url 'kanban:edit_board' board.id %}" class="edit" title="Редагувати">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="{% url 'kanban:delete_board' board.id %}" class="delete" title="Видалити">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+                <p>{{ board.description }}</p>
+                <a href="{% url 'kanban:board_detail' board.id %}">Переглянути</a>
+            </div>
+        {% empty %}
+            <p>Дошки ще не створено.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

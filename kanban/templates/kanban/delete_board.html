@@ -1,0 +1,12 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Видалити дошку{% endblock %}
+
+{% block content %}
+    <h2>Ви дійсно хочете видалити дошку: {{ board.name }}?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Видалити</button>
+        <a href="{% url 'kanban:board_list' %}">Скасувати</a>
+    </form>
+{% endblock %}

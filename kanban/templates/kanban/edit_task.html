@@ -1,0 +1,12 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Редагувати завдання{% endblock %}
+
+{% block content %}
+    <h2>Редагувати завдання: {{ task.title }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Оновити завдання</button>
+    </form>
+{% endblock %}

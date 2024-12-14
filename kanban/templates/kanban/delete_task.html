@@ -1,0 +1,12 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Видалити завдання{% endblock %}
+
+{% block content %}
+    <h2>Ви дійсно хочете видалити завдання: {{ task.title }}?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Видалити</button>
+        <a href="{% url 'kanban:board_detail' board.id %}">Скасувати</a>
+    </form>
+{% endblock %}

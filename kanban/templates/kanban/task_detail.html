@@ -1,0 +1,12 @@
+{% block title %}<h3>{{ task.title }}</h3>{% endblock %}
+
+{% block content %}
+<div class="task-detail">
+    <p><strong>Опис:</strong> {{ task.description }}</p>
+    <p><strong>Дата створення:</strong> {{ task.created_date }}</p>
+    <p><strong>Термін виконання:</strong> {{ task.expired_date }}</p>
+    <p><strong>Теги:</strong> {{ task.tags }}</p>
+    <p><strong>Виконавець:</strong> {{ task.assignee }}</p>
+    <p><strong>Автор:</strong> {{ task.author }}</p>
+</div>
+{% endblock %}

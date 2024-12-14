@@ -1,0 +1,12 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}Додати колонку{% endblock %}
+
+{% block content %}
+    <h3>Додати колонку</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Додати колонку</button>
+    </form>
+{% endblock %}

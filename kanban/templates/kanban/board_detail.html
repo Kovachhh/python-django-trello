@@ -1,0 +1,130 @@
+{% extends 'kanban/base.html' %}
+
+{% block title %}{{ board.name }} - Деталі{% endblock %}
+
+{% block content %}
+<h2>{{ board.name }}</h2>
+<p>{{ board.description }}</p>
+
+<div class="kanban-board-container">
+    <div class="kanban-columns-wrapper">
+        {% for column in board.columns.all %}
+            <div class="kanban-column" 
+                 style="background-color: {{ column.color }}" 
+                 data-column-id="{{ column.id }}" 
+                 ondragover="allowDrop(event)" 
+                 ondrop="dropTask(event, {{ column.id }})">
+                <div class="column-header">
+                    <h3 class="column-title">{{ column.name }}</h3>
+                    <div class="actions">
+                        <a href="{% url 'kanban:edit_column' column.id %}" class="edit" title="Редагувати">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="{% url 'kanban:delete_column' column.id %}" class="delete" title="Видалити">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+                <ul class="task-list">
+                    {% for task in column.tasks.all %}
+                        <li class="card" 
+                            draggable="true" 
+                            ondragstart="dragTask(event, {{ task.id }})" 
+                            data-task-id="{{ task.id }}"
+                            onclick="openTaskDetailModal({{ task.id }})">
+                            <h4>{{ task.title }}</h4>
+                            <p>{{ task.description }}</p>
+                            <div class="actions">
+                                <a href="{% url 'kanban:edit_task' task.id %}" class="edit" title="Редагувати">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{% url 'kanban:delete_task' task.id %}" class="delete" title="Видалити">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <p>Немає завдань.</p>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'kanban:add_task' column.id %}" class="add-task-btn">+ Додати завдання</a>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{% url 'kanban:add_column' board.id %}" class="add-task-btn">+ Додати колонку</a>
+</div>
+
+<div id="taskDetailModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeTaskDetailModal()">&times;</span>
+        <div id="taskDetailContent">
+        </div>
+    </div>
+</div>
+
+<script>
+    function openTaskDetailModal(taskId) {
+        fetch(`/task/${taskId}/details/`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('taskDetailContent').innerHTML = html;
+                document.getElementById('taskDetailModal').style.display = 'block';
+            });
+    }
+
+    function closeTaskDetailModal() {
+        document.getElementById('taskDetailModal').style.display = 'none';
+    }
+
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+    
+    function dragTask(event, taskId) {
+        console.log("Dragging task with ID:", taskId);
+        event.dataTransfer.setData("text/plain", taskId);
+    }
+    
+    function dropTask(event, columnId) {
+        event.preventDefault();
+        const taskId = event.dataTransfer.getData("text/plain");
+    
+        const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+        const targetColumn = document.querySelector(`[data-column-id="${columnId}"] .task-list`);
+    
+        if (taskElement && targetColumn) {
+            targetColumn.appendChild(taskElement);
+        }
+    
+        fetch('/move-task/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                task_id: taskId,
+                new_column_id: columnId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error("Помилка переміщення задачі:", response.statusText);
+                // Відкат змін у разі помилки
+                document.location.reload();
+            }
+        });
+    }
+    
+    function getCSRFToken() {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta) {
+            return csrfMeta.content;
+        } else {
+            console.error("CSRF токен не знайдено!");
+            return null;
+        }
+    }
+    
+</script>
+{% endblock %}
